@@ -1,0 +1,21 @@
+.profile__button-add {
+  padding: 0;
+  cursor: pointer;
+  width: 150px;
+  max-width: 282px;
+  height: 50px;
+  border: white 2px solid;
+  border-radius: 2px;
+  background: transparent url('../../../images/plus.svg') no-repeat center / 22px 22px;
+}
+
+@media screen and (max-width: 641px) {
+  .profile__button-add {
+    width: 100%;
+    background-size: 16px 16px;
+  }
+}
+
+.profile__button-add:focus {
+  outline: none;
+}

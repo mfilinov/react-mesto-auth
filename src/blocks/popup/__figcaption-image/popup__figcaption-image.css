@@ -1,0 +1,12 @@
+.popup__figcaption-image {
+  margin: 0;
+  padding: 10px 0 0;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 400;
+  max-width: 75vw;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  align-self: flex-start;
+}

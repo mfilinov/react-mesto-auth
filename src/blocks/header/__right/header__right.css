@@ -1,0 +1,9 @@
+.header__right {
+  display: flex;
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #fff;
+  gap: 24px;
+  padding-top: 9px;
+}

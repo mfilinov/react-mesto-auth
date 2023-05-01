@@ -1,0 +1,9 @@
+.popup__field {
+  max-width: 358px;
+}
+
+@media screen and (max-width: 580px) {
+  .popup__field {
+    max-width: 238px;
+  }
+}

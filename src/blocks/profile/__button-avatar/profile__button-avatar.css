@@ -1,0 +1,22 @@
+.profile__button-avatar {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.8) url('../../../images/update-avatar-icon.svg') no-repeat center / 26px 26px;
+  opacity: 0;
+}
+
+.profile__button-avatar:hover {
+  opacity: 1;
+}
+
+.profile__button-avatar:focus {
+  outline: none;
+}
