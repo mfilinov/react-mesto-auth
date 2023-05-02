@@ -27,7 +27,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace, onOverlayClick}) {
         <input type="text" name="imageName" id="input-image-name" placeholder="Название"
                className={`popup__input popup__input_el_image-name${errors.imageName ? '' : ' popup__input_type_error'}`}
                minLength="2" maxLength="30" required
-               value={values.imageName}
+               value={values.imageName || ""}
                onChange={handleChange}
         />
         <span className="popup__form-input-error input-image-name-error">{errors.imageName}</span>
@@ -36,7 +36,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace, onOverlayClick}) {
         <input type="url" name="imageLink" id="input-image-link" placeholder="Ссылка на картинку"
                className={`popup__input popup__input_el_image-link${errors.imageLink ? '' : ' popup__input_type_error'}`}
                required
-               value={values.imageLink}
+               value={values.imageLink || ""}
                onChange={handleChange}
         />
         <span className="popup__form-input-error input-image-link-error">{errors.imageLink}</span>
