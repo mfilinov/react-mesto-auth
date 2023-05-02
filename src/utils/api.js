@@ -1,9 +1,10 @@
 class Api {
-  constructor(url, idGroup, token) {
+  constructor(url, idGroup, token, authUrl) {
     this._url = url;
     this._idGroup = idGroup;
     this._headers = {'authorization': token, 'Content-Type': 'application/json'};
     this._uri = `${this._url}${this._idGroup}/`;
+    this._authUrl = authUrl;
   }
 
   _getResponseData(res) {
@@ -79,9 +80,51 @@ class Api {
     })
       .then(res => this._getResponseData(res));
   }
+
+  register(email, password) {
+    return fetch(`${this._authUrl}/signup`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({email, password})
+    })
+      .then(res => this._getResponseData(res));
+  }
+
+  authorize(email, password) {
+    return fetch(`${this._authUrl}/signin`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({email, password})
+    })
+      .then(res => this._getResponseData(res))
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem('jwt', data.token);
+          return data;
+        }
+      })
+  }
+  getUserContent(token) {
+    return fetch(`${this._authUrl}/users/me`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+    })
+      .then(res => this._getResponseData(res));
+  }
 }
 
+const authUrl = 'https://auth.nomoreparties.co'
 const backendUrl = 'https://mesto.nomoreparties.co/v1/';
 const identifierGroup = 'cohort-63';
 const token = '401790cd-8952-43f4-b06b-ba54f72ca752';
-export const api = new Api(backendUrl, identifierGroup, token);
+export const api = new Api(backendUrl, identifierGroup, token, authUrl);

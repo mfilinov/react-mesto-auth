@@ -1,15 +1,11 @@
 import React, {useState} from "react";
 import Header from "./Header";
-import {useNavigate} from "react-router-dom";
-import {authorize} from "../utils/auth";
 
-function Login({handleLogin, setEmail}) {
+function Login({handleLogin}) {
   const [formValue, setFormValue] = useState({
     email: '',
     password: '',
   })
-  const navigate = useNavigate();
-
   const handleChange = (e) => {
     const {name, value} = e.target;
     setFormValue({
@@ -19,14 +15,8 @@ function Login({handleLogin, setEmail}) {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    authorize(formValue.email, formValue.password)
-      .then(() => {
-        handleLogin();
-        setEmail(formValue.email);
-        setFormValue({email: '', password: ''});
-        navigate('/', {replace: true});
-      })
-      .catch(e => console.log(e));
+    handleLogin(formValue.email, formValue.password);
+    setFormValue({email: '', password: ''});
   }
   return (
     <>

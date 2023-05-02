@@ -1,14 +1,12 @@
 import React, {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import Header from "./Header";
-import {register} from "../utils/auth";
 
-function Register({handleInfoTooltip, setIsRegistrationError}) {
+function Register({onRegister}) {
   const [formValue, setFormValue] = useState({
     email: '',
     password: '',
   })
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const {name, value} = e.target;
@@ -19,16 +17,7 @@ function Register({handleInfoTooltip, setIsRegistrationError}) {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    register(formValue.email, formValue.password)
-      .then((res) => {
-        setIsRegistrationError(false);
-        handleInfoTooltip();
-        navigate('/sign-in', {replace: true});
-      })
-      .catch(() => {
-        setIsRegistrationError(true);
-        handleInfoTooltip();
-      });
+    onRegister(formValue.email, formValue.password);
   }
 
   return (

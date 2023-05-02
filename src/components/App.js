@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import Header from "./Header";
 import Main from "./Main";
 import ImagePopup from "./ImagePopup";
 import {api} from "../utils/api";
@@ -12,7 +11,6 @@ import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
-import {getContent} from "../utils/auth";
 import InfoTooltip from "./InfoTooltip";
 
 function App() {
@@ -155,24 +153,45 @@ function App() {
       }).catch(err => console.log(err));
   }
 
-  function handleLogin() {
-    setLoggedIn(true);
+  function handleLogin(email, password) {
+    api.authorize(email, password)
+      .then(() => {
+        setLoggedIn(true);
+        setEmail(email);
+        navigate('/', {replace: true});
+      })
+      .catch(e => console.log(e));
   }
 
   function tokenCheck() {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
-      getContent(jwt).then((res) => {
-        setLoggedIn(true);
-        setEmail(res.email);
-        navigate("/", {replace: true})
-      }).catch(err => console.log(err));
+      api.getUserContent(jwt)
+        .then((res) => {
+          setLoggedIn(true);
+          setEmail(res.data.email);
+          navigate("/", {replace: true})
+        })
+        .catch(err => console.log(err));
     }
   }
 
   function signOut() {
     localStorage.removeItem('jwt');
     navigate('/sign-in');
+  }
+
+  function handleRegister(email, password) {
+    api.register(email, password)
+      .then((res) => {
+        setIsRegistrationError(false);
+        handleInfoTooltipClick();
+        navigate('/sign-in', {replace: true});
+      })
+      .catch(() => {
+        setIsRegistrationError(true);
+        handleInfoTooltipClick();
+      });
   }
 
   return (
@@ -191,9 +210,8 @@ function App() {
             cards={cards}
             userEmail={email}
             onSignOut={signOut}/>}/>
-          <Route path="/sign-in" element={<Login handleLogin={handleLogin} setEmail={setEmail}/>}/>
-          <Route path="/sign-up" element={<Register handleInfoTooltip={handleInfoTooltipClick}
-                                                    setIsRegistrationError={setIsRegistrationError}/>}/>
+          <Route path="/sign-in" element={<Login handleLogin={handleLogin}/>}/>
+          <Route path="/sign-up" element={<Register onRegister={handleRegister}/>}/>
           <Route path='*' element={loggedIn ? <Navigate to="/" replace/> : <Navigate to="/sign-in" replace/>}/>
         </Routes>
         <EditProfilePopup isOpen={isEditProfilePopupOpen}

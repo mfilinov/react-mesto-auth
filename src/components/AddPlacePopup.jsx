@@ -1,66 +1,45 @@
 import PopupWithForm from "./PopupWithForm";
 import React from "react";
+import useFormAndValidation from "../hooks/useFormAndValidation";
 
 function AddPlacePopup({isOpen, onClose, onAddPlace, onOverlayClick}) {
-  const [imageNameData, setImageNameData] = React.useState({
-    imageName: '',
-    validationMessage: '',
-    isValid: false
-  });
-  const [imageLinkData, setImageLinkData] = React.useState({
-    imageLink: '',
-    validationMessage: '',
-    isValid: false
-  })
-
-  function handleInputImageNameChange(e) {
-    setImageNameData({imageName: e.target.value, validationMessage: e.target.validationMessage, isValid: e.target.validity.valid});
-  }
-
-  function handleInputImageLinkChange(e) {
-    setImageLinkData({imageLink: e.target.value, validationMessage: e.target.validationMessage, isValid: e.target.validity.valid});
-  }
-
+  const {values, handleChange, errors, isValid, setValues} = useFormAndValidation();
 
   function handleSubmit(e) {
     e.preventDefault();
-    onAddPlace(imageNameData.imageName, imageLinkData.imageLink);
+    onAddPlace(values.imageName, values.imageLink);
   }
 
-  function closePopupAndCleanInput() {
-    setImageNameData({imageName: '', validationMessage: '', isValid: false});
-    setImageLinkData({imageLink: '', validationMessage: '', isValid: false});
-    onClose();
-  }
-
-  const isSubmitDisabled = (!imageNameData.isValid || !imageLinkData.isValid)
+  React.useEffect(() => {
+    setValues({imageName: '', imageLink: ''})
+  }, [isOpen]);
 
   return (
     <PopupWithForm title="Новое место"
                    name="add-image"
                    isOpen={isOpen}
-                   onClose={closePopupAndCleanInput}
+                   onClose={onClose}
                    onSubmit={handleSubmit}
                    onOverlayClick={onOverlayClick}
-                   isSubmitDisabled={isSubmitDisabled}
+                   isSubmitDisabled={!isValid}
                    submitName="Создать">
       <div className="popup__field">
         <input type="text" name="imageName" id="input-image-name" placeholder="Название"
-               className={`popup__input popup__input_el_image-name${imageNameData.isValid ? '' : ' popup__input_type_error'}`}
+               className={`popup__input popup__input_el_image-name${errors.imageName ? '' : ' popup__input_type_error'}`}
                minLength="2" maxLength="30" required
-               value={imageNameData.imageName}
-               onChange={handleInputImageNameChange}
+               value={values.imageName}
+               onChange={handleChange}
         />
-        <span className="popup__form-input-error input-image-name-error">{imageNameData.validationMessage}</span>
+        <span className="popup__form-input-error input-image-name-error">{errors.imageName}</span>
       </div>
       <div className="popup__field">
         <input type="url" name="imageLink" id="input-image-link" placeholder="Ссылка на картинку"
-               className={`popup__input popup__input_el_image-link${imageLinkData.isValid ? '' : ' popup__input_type_error'}`}
+               className={`popup__input popup__input_el_image-link${errors.imageLink ? '' : ' popup__input_type_error'}`}
                required
-               value={imageLinkData.imageLink}
-               onChange={handleInputImageLinkChange}
+               value={values.imageLink}
+               onChange={handleChange}
         />
-        <span className="popup__form-input-error input-image-link-error">{imageLinkData.validationMessage}</span>
+        <span className="popup__form-input-error input-image-link-error">{errors.imageLink}</span>
       </div>
     </PopupWithForm>
   )
